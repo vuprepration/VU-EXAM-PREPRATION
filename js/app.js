@@ -10,6 +10,7 @@ const app = {
     sessionStarted: false,
     testSubmitted: false,
     searchQuery: '',
+    progressStorageKey: 'vu-exam-session-progress-v1',
     
     // Initialize the app
     init() {
@@ -107,13 +108,76 @@ const app = {
     // Start a session
     startSession(sessionId) {
         console.log("[v0] Session started:", sessionId);
+        if (!this.currentSubject || !this.isSessionUnlocked(this.currentSubject.id, sessionId)) {
+            alert('This session is locked. Complete the previous session first.');
+            return;
+        }
+
         this.currentSession = getSession(this.currentSubject.id, sessionId);
+        if (!this.currentSession) return;
+
         this.currentView = 'test';
         this.currentQuestionIndex = 0;
         this.userAnswers = {};
         this.sessionStarted = true;
         this.testSubmitted = false;
         this.render();
+    },
+
+    getProgress() {
+        try {
+            const savedProgress = localStorage.getItem(this.progressStorageKey);
+            return savedProgress ? JSON.parse(savedProgress) : {};
+        } catch (error) {
+            console.warn('[v0] Could not read session progress:', error);
+            return {};
+        }
+    },
+
+    saveProgress(progress) {
+        try {
+            localStorage.setItem(this.progressStorageKey, JSON.stringify(progress));
+        } catch (error) {
+            console.warn('[v0] Could not save session progress:', error);
+        }
+    },
+
+    getCompletedSessions(subjectId) {
+        const subjectProgress = this.getProgress()[subjectId];
+        return Array.isArray(subjectProgress?.completedSessions)
+            ? subjectProgress.completedSessions
+            : [];
+    },
+
+    isSessionCompleted(subjectId, sessionId) {
+        return this.getCompletedSessions(subjectId).includes(Number(sessionId));
+    },
+
+    isSessionUnlocked(subjectId, sessionId) {
+        const subject = getSubject(subjectId);
+        if (!subject) return false;
+
+        const sessionIndex = subject.sessions.findIndex(session => Number(session.id) === Number(sessionId));
+        if (sessionIndex <= 0) return sessionIndex === 0;
+
+        const previousSession = subject.sessions[sessionIndex - 1];
+        return this.isSessionCompleted(subjectId, previousSession.id);
+    },
+
+    markSessionCompleted(subjectId, sessionId) {
+        const progress = this.getProgress();
+        const completedSessions = this.getCompletedSessions(subjectId);
+        const numericSessionId = Number(sessionId);
+
+        if (!completedSessions.includes(numericSessionId)) {
+            completedSessions.push(numericSessionId);
+        }
+
+        progress[subjectId] = {
+            completedSessions: completedSessions.sort((a, b) => a - b),
+            lastCompletedAt: new Date().toISOString()
+        };
+        this.saveProgress(progress);
     },
     
     // Select an answer
@@ -281,6 +345,7 @@ const app = {
         // Calculate score
         const score = this.calculateScore();
         console.log("[v0] Test score:", score);
+        this.markSessionCompleted(this.currentSubject.id, this.currentSession.id);
         
         this.render();
     },
@@ -302,6 +367,22 @@ const app = {
         console.log("[v0] Retaking test");
         const sessionId = this.currentSession.id;
         this.startSession(sessionId);
+    },
+
+    getNextSession() {
+        if (!this.currentSubject || !this.currentSession) return null;
+
+        const currentSessionIndex = this.currentSubject.sessions.findIndex(session => Number(session.id) === Number(this.currentSession.id));
+        if (currentSessionIndex < 0) return null;
+
+        return this.currentSubject.sessions[currentSessionIndex + 1] || null;
+    },
+
+    startNextSession() {
+        const nextSession = this.getNextSession();
+        if (!nextSession) return;
+
+        this.startSession(nextSession.id);
     },
     
     // Render the current view

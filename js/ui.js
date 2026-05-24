@@ -133,19 +133,32 @@ const ui = {
         app.currentSubject.sessions.forEach(session => {
             const card = document.createElement('div');
             const isFinalSession = session.id === 5;
+            const isLocked = !app.isSessionUnlocked(app.currentSubject.id, session.id);
+            const isCompleted = app.isSessionCompleted(app.currentSubject.id, session.id);
             const sessionBadge = isFinalSession ? 'Final' : `Session ${session.id}`;
-            card.className = `session-card${isFinalSession ? ' final-session' : ''}`;
-            card.setAttribute('role', 'button');
-            card.setAttribute('tabindex', '0');
-            card.setAttribute('aria-label', `Start ${session.name} with ${session.questions.length} questions`);
+            const statusText = isLocked ? 'Locked' : isCompleted ? 'Completed' : 'Start';
+            const infoText = isLocked ? 'Complete previous session to unlock' : `${session.questions.length} Questions`;
+
+            card.className = `session-card${isFinalSession ? ' final-session' : ''}${isLocked ? ' locked-session' : ''}${isCompleted ? ' completed-session' : ''}`;
+            card.setAttribute('role', isLocked ? 'group' : 'button');
+            card.setAttribute('tabindex', isLocked ? '-1' : '0');
+            card.setAttribute('aria-disabled', isLocked ? 'true' : 'false');
+            card.setAttribute('aria-label', isLocked
+                ? `${session.name} is locked. Complete the previous session first.`
+                : `Start ${session.name} with ${session.questions.length} questions`);
             card.innerHTML = `
                 <div class="session-number">${sessionBadge}</div>
                 <div class="session-card-body">
                     <div class="session-label">${session.name}</div>
-                    <div class="session-info">${session.questions.length} Questions</div>
+                    <div class="session-info">${infoText}</div>
                 </div>
-                <div class="session-start">Start</div>
+                <div class="session-start">${statusText}</div>
             `;
+            if (isLocked) {
+                sessionsList.appendChild(card);
+                return;
+            }
+
             card.addEventListener('click', () => {
                 app.startSession(session.id);
             });
@@ -206,6 +219,13 @@ const ui = {
             performanceText.textContent = 'Fair performance, review concepts!';
         } else {
             performanceText.textContent = 'Keep practicing to improve!';
+        }
+
+        const nextSessionBtn = document.getElementById('next-session-btn');
+        if (nextSessionBtn) {
+            const nextSession = app.getNextSession();
+            nextSessionBtn.style.display = nextSession ? 'inline-flex' : 'none';
+            nextSessionBtn.textContent = nextSession ? `Start ${nextSession.name}` : 'Next Session';
         }
         
         // Render answer review

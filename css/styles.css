@@ -2683,6 +2683,45 @@ body.dark-mode #sessions-view .session-card {
     outline: none;
 }
 
+#sessions-view .session-card.locked-session {
+    cursor: not-allowed;
+    opacity: 0.72;
+    filter: grayscale(0.25);
+    border-color: rgba(148, 163, 184, 0.32);
+    background: linear-gradient(135deg, rgba(241, 245, 249, 0.98), rgba(226, 232, 240, 0.92));
+    box-shadow: none;
+}
+
+body.dark-mode #sessions-view .session-card.locked-session {
+    background: linear-gradient(135deg, rgba(30, 41, 59, 0.82), rgba(15, 23, 42, 0.76));
+    border-color: rgba(148, 163, 184, 0.2);
+}
+
+#sessions-view .session-card.locked-session:hover,
+#sessions-view .session-card.locked-session:focus-visible {
+    transform: none;
+    border-color: rgba(148, 163, 184, 0.32);
+    box-shadow: none;
+}
+
+#sessions-view .session-card.locked-session::before {
+    opacity: 0;
+}
+
+#sessions-view .session-card.completed-session {
+    border-color: rgba(16, 185, 129, 0.52);
+}
+
+#sessions-view .session-card.completed-session .session-number {
+    background: rgba(16, 185, 129, 0.14);
+    color: #047857;
+}
+
+body.dark-mode #sessions-view .session-card.completed-session .session-number {
+    background: rgba(52, 211, 153, 0.16);
+    color: #86efac;
+}
+
 #sessions-view .session-card:hover::before,
 #sessions-view .session-card:focus-visible::before {
     opacity: 1;
@@ -2778,6 +2817,31 @@ body.dark-mode #sessions-view .session-start {
 #sessions-view .session-card:focus-visible .session-start {
     opacity: 1;
     transform: translateY(0);
+}
+
+#sessions-view .session-card.locked-session .session-start,
+#sessions-view .session-card.completed-session .session-start {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+#sessions-view .session-card.locked-session .session-start {
+    background: #64748b;
+    color: #ffffff;
+}
+
+#sessions-view .session-card.completed-session .session-start {
+    background: #047857;
+    color: #ffffff;
+}
+
+#sessions-view .session-card.locked-session .session-info::before {
+    background: #94a3b8;
+    box-shadow: 0 0 0 4px rgba(148, 163, 184, 0.14);
+}
+
+#sessions-view .session-card.completed-session .session-info::before {
+    background: #10b981;
 }
 
 #sessions-view .session-card.final-session {
