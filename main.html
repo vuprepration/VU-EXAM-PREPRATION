@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VU Exam Preparation - MCQ Tests</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Poppins:wght@600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <!-- Home View: Subject Selection -->
+    <div id="home-view" class="view active">
+        <header class="header">
+            <div class="header-content">
+                <div class="header-flex">
+                    <div>
+                        <h1>VU EXAM PREPARATION</h1>
+                        <p class="subtitle">PREPARE FOR VU YOUR EXAMS HERE</p>
+                    </div>
+                    <button id="theme-toggle" class="theme-toggle" aria-label="Switch to dark mode" title="Switch to dark mode">
+                        <span class="theme-icon" aria-hidden="true"></span>
+                    </button>
+                </div>
+            </div>
+        </header>
+        
+        <main class="container">
+            <section class="subjects-section">
+                <div class="search-bar">
+                    <input id="subject-search-input" type="search" placeholder="Search subjects..." aria-label="Search subjects">
+                    <button id="subject-search-btn" class="btn btn-primary" onclick="app.searchSubjects()">Search</button>
+                </div>
+                <h2>Select a Subject</h2>
+                <div id="subjects-grid" class="subjects-grid">
+                    <!-- Subjects will be populated by JavaScript -->
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Sessions View: Session Selection -->
+    <div id="sessions-view" class="view">
+        <header class="header">
+            <div class="header-content">
+                <button class="back-btn" onclick="app.goHome()">← Back</button>
+                <h1 id="sessions-title">Subject Name</h1>
+                <p class="subtitle">Select a session to start</p>
+            </div>
+        </header>
+        
+        <main class="container">
+            <section class="sessions-section">
+                <div id="sessions-list" class="sessions-list">
+                    <!-- Sessions will be populated by JavaScript -->
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Test View: MCQ Test -->
+    <div id="test-view" class="view">
+        <header class="header">
+            <div class="header-content">
+                <button class="back-btn" onclick="app.goHome()">← Back to Subjects</button>
+                <h1 id="test-title">Subject - Session</h1>
+            </div>
+        </header>
+        
+        <main class="container">
+            <!-- Progress Bar -->
+            <div class="progress-section">
+                <div class="progress-info">
+                    <span id="question-counter">Question 1 of 10</span>
+                    <div class="progress-bar">
+                        <div id="progress-fill" class="progress-fill"></div>
+                    </div>
+                    <span id="answered-counter" class="answered-counter">0 answered</span>
+                </div>
+                
+                <!-- Question Tracker -->
+                <div class="question-tracker">
+                    <div id="tracker-container" class="tracker-container">
+                        <!-- Question dots will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- MCQ Question -->
+            <section class="test-section">
+                <div class="question-card">
+                    <h2 id="question-text" class="question-text">Question text will appear here</h2>
+                    
+                    <div id="options-container" class="options-container">
+                        <!-- MCQ options will be populated by JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Navigation -->
+                <div class="test-navigation">
+                    <button id="prev-btn" class="btn btn-secondary" onclick="app.previousQuestion()" disabled>Previous</button>
+                    <button id="next-btn" class="btn btn-primary" onclick="app.nextQuestion()">Next</button>
+                    <button id="submit-btn" class="btn btn-success" onclick="app.submitTest()" style="display: none;">Submit Test</button>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Results View: Test Results -->
+    <div id="results-view" class="view">
+        <header class="header">
+            <div class="header-content">
+                <h1>Test Completed!</h1>
+                <p class="subtitle">Review your results</p>
+            </div>
+        </header>
+        
+        <main class="container">
+            <!-- Score Card -->
+            <section class="results-section">
+                <div class="score-card">
+                    <div class="score-display">
+                        <div class="score-circle">
+                            <div class="score-text">
+                                <span id="score-number" class="score-number">0</span>
+                                <span class="score-label">/ 10</span>
+                            </div>
+                        </div>
+                        <div class="score-info">
+                            <p id="percentage-text" class="percentage">0%</p>
+                            <p id="performance-text" class="performance">Great effort!</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Answer Review -->
+                <div class="review-section">
+                    <div class="review-section-header">
+                        <div>
+                            <p class="section-kicker">Detailed Review</p>
+                            <h2>Answer Review</h2>
+                        </div>
+                        <div id="review-summary" class="review-summary" aria-label="Answer review summary"></div>
+                    </div>
+                    <div id="review-container" class="review-container">
+                        <!-- Answers will be populated by JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="results-actions">
+                    <button class="btn btn-secondary" onclick="app.goHome()">Back to Subjects</button>
+                    <button class="btn btn-primary" onclick="app.retakeTest()">Retake Test</button>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <footer class="site-footer" aria-label="Site footer">
+        <div class="site-footer-content">
+            <div class="site-footer-brand">
+                <span class="site-footer-logo" aria-hidden="true">VU</span>
+                <div>
+                    <p class="site-footer-title">VU Exam Preparation</p>
+                    <p class="site-footer-copy">&copy; 2026 All rights reserved.</p>
+                </div>
+            </div>
+            <nav class="site-footer-links" aria-label="Footer links">
+                <a href="terms.html" aria-label="Read Terms and Conditions">Terms and Conditions</a>
+                <a href="privacy.html" aria-label="Read Privacy Policy">Privacy Policy</a>
+                <a class="site-footer-contact" href="mailto:vuprepration@gmail.com" aria-label="Contact us by email">vuprepration@gmail.com</a>
+            </nav>
+        </div>
+    </footer>
+
+    <!-- AI Assistant -->
+    <div id="ai-agent-modal" class="ai-agent-modal" aria-hidden="true">
+        <div class="ai-agent-card">
+            <div class="ai-agent-header">
+                <div>
+                    <h2>AI Study Assistant</h2>
+                    <p>Get hints, answer checks, and simple explanations while you practice.</p>
+                </div>
+                <button type="button" class="ai-agent-close" aria-label="Close assistant" onclick="assistant.toggle()">×</button>
+            </div>
+            <div class="ai-agent-actions" aria-label="Quick assistant actions">
+                <button type="button" onclick="assistant.quickAsk('hint')">Hint</button>
+                <button type="button" onclick="assistant.quickAsk('explain')">Explain</button>
+                <button type="button" onclick="assistant.quickAsk('check my answer')">Check</button>
+                <button type="button" onclick="assistant.quickAsk('study tip')">Study Tip</button>
+            </div>
+            <div id="ai-agent-messages" class="ai-agent-messages"></div>
+            <div class="ai-agent-input-row">
+                <input id="ai-agent-input" type="text" placeholder="Ask me anything..." aria-label="Ask the AI assistant">
+                <button id="ai-agent-send" class="btn btn-primary" type="button">Send</button>
+            </div>
+        </div>
+    </div>
+
+    <button id="ai-agent-button" class="ai-agent-button" type="button" onclick="assistant.toggle()">AI Help</button>
+
+    <!-- Scripts -->
+    <script src="js/data.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/ui.js"></script>
+</body>
+</html>
