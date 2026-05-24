@@ -2781,6 +2781,9 @@ body.dark-mode #sessions-view .session-start {
 }
 
 #sessions-view .session-card.final-session {
+    grid-column: 1 / -1;
+    justify-self: center;
+    width: min(100%, calc((100% - 1rem) / 2));
     border-color: rgba(245, 158, 11, 0.45);
     background: linear-gradient(135deg, rgba(255, 251, 235, 0.98), rgba(248, 250, 252, 0.94));
 }
@@ -2832,6 +2835,10 @@ body.dark-mode #sessions-view .session-card.final-session .session-label {
 
     #sessions-view .session-card {
         min-height: 9.25rem;
+    }
+
+    #sessions-view .session-card.final-session {
+        width: 100%;
     }
 
     #sessions-view .session-start {
