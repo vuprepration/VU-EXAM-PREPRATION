@@ -136,7 +136,14 @@ const ui = {
             const isLocked = !app.isSessionUnlocked(app.currentSubject.id, session.id);
             const isCompleted = app.isSessionCompleted(app.currentSubject.id, session.id);
             const sessionBadge = isFinalSession ? 'Final' : `Session ${session.id}`;
-            const statusText = isLocked ? 'Locked' : isCompleted ? 'Completed' : 'Start';
+            const statusContent = isLocked
+                ? `<span class="session-lock-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" focusable="false">
+                        <path d="M7 11V8a5 5 0 0 1 10 0v3" />
+                        <rect x="5" y="11" width="14" height="10" rx="2" />
+                    </svg>
+                </span>`
+                : isCompleted ? 'Completed' : 'Start';
             const infoText = isLocked ? 'Complete previous session to unlock' : `${session.questions.length} Questions`;
 
             card.className = `session-card${isFinalSession ? ' final-session' : ''}${isLocked ? ' locked-session' : ''}${isCompleted ? ' completed-session' : ''}`;
@@ -152,7 +159,7 @@ const ui = {
                     <div class="session-label">${session.name}</div>
                     <div class="session-info">${infoText}</div>
                 </div>
-                <div class="session-start">${statusText}</div>
+                <div class="session-start">${statusContent}</div>
             `;
             if (isLocked) {
                 sessionsList.appendChild(card);
