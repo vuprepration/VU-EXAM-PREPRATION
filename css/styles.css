@@ -3501,6 +3501,16 @@ body.dark-mode #results-view {
     letter-spacing: 0;
 }
 
+#results-view .results-header-next {
+    position: relative;
+    z-index: 1;
+    width: fit-content;
+    margin-top: 1.1rem;
+    min-height: 2.9rem;
+    padding: 0.8rem 1.25rem;
+    border-radius: 8px;
+}
+
 #results-view .container {
     width: min(100% - 2rem, 1080px);
     margin-top: -2.65rem;
@@ -3934,6 +3944,11 @@ body.dark-mode #results-view .review-explanation-label {
 @media (max-width: 760px) {
     #results-view .header {
         padding: 2rem 0 4.2rem;
+    }
+
+    #results-view .results-header-next {
+        width: 100%;
+        justify-content: center;
     }
 
     #results-view .container {

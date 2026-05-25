@@ -275,12 +275,16 @@ const ui = {
             performanceText.textContent = 'Keep practicing to improve!';
         }
 
-        const nextSessionBtn = document.getElementById('next-session-btn');
-        if (nextSessionBtn) {
-            const nextSession = app.getNextSession();
-            nextSessionBtn.style.display = nextSession ? 'inline-flex' : 'none';
-            nextSessionBtn.textContent = nextSession ? `Start ${nextSession.name}` : 'Next Session';
-        }
+        const nextSession = app.getNextSession();
+        const nextSessionButtons = [
+            document.getElementById('header-next-session-btn'),
+            document.getElementById('next-session-btn')
+        ].filter(Boolean);
+
+        nextSessionButtons.forEach(button => {
+            button.style.display = nextSession ? 'inline-flex' : 'none';
+            button.textContent = nextSession ? `Start ${nextSession.name}` : 'Next Session';
+        });
 
         const resultProgressSummary = document.getElementById('result-progress-summary');
         if (resultProgressSummary) {
