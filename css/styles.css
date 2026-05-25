@@ -4265,11 +4265,28 @@ body.dark-mode #results-view .review-explanation-label {
         padding: 2.3rem 0 4.6rem;
     }
 
+    #home-view .header-content,
+    #home-view .header-flex {
+        width: 100%;
+        min-width: 0;
+    }
+
+    #home-view .header-flex {
+        justify-content: center;
+        text-align: center;
+    }
+
+    #home-view .header-flex > div {
+        width: min(100%, 21rem);
+        min-width: 0;
+    }
+
     #home-view .header h1 {
-        max-width: 10ch;
+        max-width: 9.5ch;
         margin: 0 auto 0.75rem;
-        font-size: clamp(2rem, 10vw, 2.65rem) !important;
+        font-size: clamp(1.85rem, 9vw, 2.35rem) !important;
         line-height: 1.05;
+        overflow-wrap: anywhere;
     }
 
     #home-view .header .subtitle {
@@ -4489,5 +4506,197 @@ body.dark-mode #results-view .review-explanation-label {
 
     #home-view .subject-card h3 {
         padding-right: 0;
+    }
+}
+
+/* Centered mobile cards */
+@media (max-width: 768px) {
+    html,
+    body {
+        max-width: 100%;
+        overflow-x: hidden;
+    }
+
+    .container,
+    #home-view .container,
+    #sessions-view .container {
+        width: min(100%, 31rem);
+        max-width: calc(100vw - 1.5rem);
+        margin-left: auto;
+        margin-right: auto;
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    #home-view .subjects-section,
+    #sessions-view .sessions-section {
+        align-items: center;
+    }
+
+    #home-view .search-bar {
+        width: min(100%, 27rem);
+        max-width: calc(100vw - 2rem);
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    #home-view .subjects-grid,
+    #sessions-view .sessions-list {
+        width: min(100%, 27rem);
+        max-width: calc(100vw - 2rem);
+        margin-left: auto;
+        margin-right: auto;
+        justify-items: center;
+    }
+
+    #home-view .subject-division,
+    #sessions-view .subject-progress-panel,
+    #home-view .subject-card,
+    #sessions-view .session-card {
+        box-sizing: border-box;
+        width: min(100%, 27rem);
+        max-width: calc(100vw - 2rem);
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    #home-view .division-grid,
+    #sessions-view .sessions-list {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    #home-view .subject-division {
+        width: min(calc(100% - 1rem), 27rem);
+        max-width: calc(100vw - 2.5rem);
+        padding: 0.85rem;
+    }
+
+    #sessions-view .subject-progress-panel {
+        width: min(calc(100% - 1rem), 27rem);
+        max-width: calc(100vw - 2rem);
+    }
+
+    #home-view .division-header,
+    #sessions-view .subject-progress-panel,
+    #sessions-view .session-card {
+        text-align: center;
+    }
+
+    #home-view .division-header {
+        align-items: center;
+        justify-content: center;
+    }
+
+    #home-view .division-kicker,
+    #home-view .division-header h3 {
+        text-align: center;
+    }
+
+    #home-view .subject-card {
+        align-items: center;
+        padding: 1rem;
+        text-align: center;
+    }
+
+    #home-view .subject-card-top {
+        justify-content: center;
+        grid-template-columns: auto auto;
+    }
+
+    #home-view .subject-code,
+    #home-view .subject-action,
+    #sessions-view .session-number,
+    #sessions-view .session-start {
+        max-width: 100%;
+        white-space: normal;
+        text-align: center;
+    }
+
+    #home-view .subject-card h3,
+    #home-view .subject-card p {
+        width: 100%;
+        text-align: center;
+        overflow-wrap: anywhere;
+    }
+
+    #home-view .subject-progress {
+        width: 100%;
+    }
+
+    #home-view .subject-progress-meta {
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 0.35rem 0.75rem;
+    }
+
+    #sessions-view .sessions-section::before {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    #sessions-view .subject-progress-panel {
+        justify-items: center;
+    }
+
+    #sessions-view .subject-progress-panel-side {
+        width: 100%;
+        align-items: center;
+    }
+
+    #sessions-view .session-card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-height: 0;
+        padding: 1rem;
+        gap: 0.75rem;
+    }
+
+    #sessions-view .session-number {
+        justify-content: center;
+        margin: 0;
+    }
+
+    #sessions-view .session-label,
+    #sessions-view .session-info,
+    #sessions-view .session-attempts {
+        text-align: center;
+    }
+
+    #sessions-view .session-info {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    #sessions-view .session-start {
+        position: static;
+        justify-content: center;
+        transform: none;
+        opacity: 1;
+    }
+}
+
+@media (max-width: 380px) {
+    .container,
+    #home-view .container,
+    #sessions-view .container {
+        max-width: calc(100vw - 1rem);
+    }
+
+    #home-view .subject-division {
+        width: min(calc(100% - 0.5rem), 27rem);
+        max-width: calc(100vw - 1.5rem);
+        padding: 0.7rem;
+    }
+
+    #sessions-view .subject-progress-panel {
+        width: min(calc(100% - 0.5rem), 27rem);
+        max-width: calc(100vw - 1.5rem);
+    }
+
+    #home-view .subject-card,
+    #sessions-view .session-card,
+    #sessions-view .subject-progress-panel {
+        padding: 0.85rem;
     }
 }
