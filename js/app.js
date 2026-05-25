@@ -149,6 +149,33 @@ const app = {
             : [];
     },
 
+    getSessionProgress(subjectId, sessionId) {
+        const subjectProgress = this.getProgress()[subjectId];
+        const sessions = subjectProgress?.sessions || {};
+        return sessions[String(sessionId)] || null;
+    },
+
+    getSubjectProgress(subjectId) {
+        const subject = getSubject(subjectId);
+        const completedSessions = this.getCompletedSessions(subjectId);
+        const totalSessions = subject?.sessions?.length || 0;
+        const validCompletedSessions = (subject?.sessions || [])
+            .filter(session => completedSessions.includes(Number(session.id)))
+            .map(session => Number(session.id));
+        const completedCount = validCompletedSessions.length;
+        const percent = totalSessions > 0 ? Math.round((completedCount / totalSessions) * 100) : 0;
+        const sessions = subject?.sessions || [];
+        const nextSession = sessions.find(session => !this.isSessionCompleted(subjectId, session.id)) || null;
+
+        return {
+            totalSessions,
+            completedCount,
+            percent,
+            nextSession,
+            completedSessions: validCompletedSessions
+        };
+    },
+
     isSessionCompleted(subjectId, sessionId) {
         return this.getCompletedSessions(subjectId).includes(Number(sessionId));
     },
@@ -164,18 +191,37 @@ const app = {
         return this.isSessionCompleted(subjectId, previousSession.id);
     },
 
-    markSessionCompleted(subjectId, sessionId) {
+    markSessionCompleted(subjectId, sessionId, score = 0, totalQuestions = 0) {
         const progress = this.getProgress();
         const completedSessions = this.getCompletedSessions(subjectId);
         const numericSessionId = Number(sessionId);
+        const sessionKey = String(sessionId);
+        const subjectProgress = progress[subjectId] || {};
+        const previousSessionProgress = subjectProgress.sessions?.[sessionKey] || {};
+        const previousBest = Number(previousSessionProgress.bestScore || 0);
+        const attempts = Number(previousSessionProgress.attempts || 0) + 1;
+        const percentage = totalQuestions > 0 ? Math.round((score / totalQuestions) * 100) : 0;
+        const completedAt = new Date().toISOString();
 
         if (!completedSessions.includes(numericSessionId)) {
             completedSessions.push(numericSessionId);
         }
 
         progress[subjectId] = {
+            ...subjectProgress,
             completedSessions: completedSessions.sort((a, b) => a - b),
-            lastCompletedAt: new Date().toISOString()
+            sessions: {
+                ...(subjectProgress.sessions || {}),
+                [sessionKey]: {
+                    attempts,
+                    lastScore: score,
+                    totalQuestions,
+                    percentage,
+                    bestScore: Math.max(previousBest, score),
+                    completedAt
+                }
+            },
+            lastCompletedAt: completedAt
         };
         this.saveProgress(progress);
     },
@@ -345,7 +391,7 @@ const app = {
         // Calculate score
         const score = this.calculateScore();
         console.log("[v0] Test score:", score);
-        this.markSessionCompleted(this.currentSubject.id, this.currentSession.id);
+        this.markSessionCompleted(this.currentSubject.id, this.currentSession.id, score, this.currentSession.questions.length);
         
         this.render();
     },

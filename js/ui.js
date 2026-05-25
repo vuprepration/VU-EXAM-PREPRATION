@@ -66,6 +66,10 @@ const ui = {
             card.className = 'subject-card';
             const courseCode = subject.name.includes(' - ') ? subject.name.split(' - ')[0] : 'Course';
             const subjectTitle = subject.name.includes(' - ') ? subject.name.split(' - ').slice(1).join(' - ') : subject.name;
+            const progress = app.getSubjectProgress(subject.id);
+            const progressLabel = progress.totalSessions > 0
+                ? `${progress.completedCount}/${progress.totalSessions} sessions`
+                : 'No sessions yet';
             card.setAttribute('role', 'button');
             card.setAttribute('tabindex', '0');
             card.setAttribute('aria-label', `Open ${subject.name}`);
@@ -76,6 +80,15 @@ const ui = {
                 </div>
                 <h3>${subjectTitle}</h3>
                 <p>${subject.description}</p>
+                <div class="subject-progress">
+                    <div class="subject-progress-meta">
+                        <span>Progress</span>
+                        <strong>${progressLabel}</strong>
+                    </div>
+                    <div class="mini-progress-bar" aria-hidden="true">
+                        <span style="width: ${progress.percent}%"></span>
+                    </div>
+                </div>
             `;
             card.addEventListener('click', () => {
                 app.selectSubject(subject.id);
@@ -125,6 +138,7 @@ const ui = {
         
         // Update title
         document.getElementById('sessions-title').textContent = app.currentSubject.name;
+        this.renderSubjectProgressPanel();
         
         // Render sessions
         const sessionsList = document.getElementById('sessions-list');
@@ -135,6 +149,7 @@ const ui = {
             const isFinalSession = session.id === 5;
             const isLocked = !app.isSessionUnlocked(app.currentSubject.id, session.id);
             const isCompleted = app.isSessionCompleted(app.currentSubject.id, session.id);
+            const progress = app.getSessionProgress(app.currentSubject.id, session.id);
             const sessionBadge = isFinalSession ? 'Final' : `Session ${session.id}`;
             const statusContent = isLocked
                 ? `<span class="session-lock-icon" aria-hidden="true">
@@ -144,7 +159,14 @@ const ui = {
                     </svg>
                 </span>`
                 : isCompleted ? 'Completed' : 'Start';
-            const infoText = isLocked ? 'Complete previous session to unlock' : `${session.questions.length} Questions`;
+            const infoText = isLocked
+                ? 'Complete previous session to unlock'
+                : isCompleted && progress
+                    ? `Best ${progress.bestScore}/${progress.totalQuestions} (${progress.percentage}%)`
+                    : `${session.questions.length} Questions`;
+            const attemptsText = progress?.attempts
+                ? `<div class="session-attempts">${progress.attempts} attempt${progress.attempts === 1 ? '' : 's'}</div>`
+                : '';
 
             card.className = `session-card${isFinalSession ? ' final-session' : ''}${isLocked ? ' locked-session' : ''}${isCompleted ? ' completed-session' : ''}`;
             card.setAttribute('role', isLocked ? 'group' : 'button');
@@ -158,6 +180,7 @@ const ui = {
                 <div class="session-card-body">
                     <div class="session-label">${session.name}</div>
                     <div class="session-info">${infoText}</div>
+                    ${attemptsText}
                 </div>
                 <div class="session-start">${statusContent}</div>
             `;
@@ -177,6 +200,30 @@ const ui = {
             });
             sessionsList.appendChild(card);
         });
+    },
+
+    renderSubjectProgressPanel() {
+        const panel = document.getElementById('subject-progress-panel');
+        if (!panel || !app.currentSubject) return;
+
+        const progress = app.getSubjectProgress(app.currentSubject.id);
+        const nextLabel = progress.nextSession
+            ? `Next: ${progress.nextSession.name}`
+            : progress.totalSessions > 0 ? 'All sessions completed' : 'No sessions available';
+
+        panel.innerHTML = `
+            <div class="subject-progress-panel-main">
+                <p class="section-kicker">Progress Tracking</p>
+                <h2>${progress.percent}% Complete</h2>
+                <p>${progress.completedCount} of ${progress.totalSessions} sessions completed</p>
+            </div>
+            <div class="subject-progress-panel-side">
+                <strong>${nextLabel}</strong>
+                <div class="wide-progress-bar" aria-hidden="true">
+                    <span style="width: ${progress.percent}%"></span>
+                </div>
+            </div>
+        `;
     },
     
     // Render test view
@@ -233,6 +280,12 @@ const ui = {
             const nextSession = app.getNextSession();
             nextSessionBtn.style.display = nextSession ? 'inline-flex' : 'none';
             nextSessionBtn.textContent = nextSession ? `Start ${nextSession.name}` : 'Next Session';
+        }
+
+        const resultProgressSummary = document.getElementById('result-progress-summary');
+        if (resultProgressSummary) {
+            const subjectProgress = app.getSubjectProgress(app.currentSubject.id);
+            resultProgressSummary.textContent = `${subjectProgress.completedCount}/${subjectProgress.totalSessions} sessions completed in this subject`;
         }
         
         // Render answer review

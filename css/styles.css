@@ -2641,6 +2641,64 @@ body.dark-mode #sessions-view .sessions-section::before {
     color: #99f6e4;
 }
 
+#sessions-view .subject-progress-panel {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(18rem, 0.7fr);
+    gap: 1rem;
+    align-items: stretch;
+    margin-bottom: 1.25rem;
+    padding: 1.15rem;
+    border: 1px solid rgba(148, 163, 184, 0.28);
+    border-radius: 8px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(240, 253, 250, 0.92));
+    box-shadow: 0 16px 38px rgba(15, 23, 42, 0.08);
+}
+
+body.dark-mode #sessions-view .subject-progress-panel {
+    background: linear-gradient(135deg, rgba(30, 41, 59, 0.96), rgba(15, 23, 42, 0.92));
+    border-color: rgba(148, 163, 184, 0.25);
+}
+
+#sessions-view .subject-progress-panel-main h2 {
+    margin: 0 0 0.35rem;
+    color: #0f172a;
+    font-size: clamp(1.8rem, 4vw, 2.8rem) !important;
+    line-height: 1;
+    letter-spacing: 0;
+}
+
+#sessions-view .subject-progress-panel-main p:last-child {
+    margin: 0;
+    color: #475569;
+    font-weight: 700;
+}
+
+body.dark-mode #sessions-view .subject-progress-panel-main h2 {
+    color: #f8fafc;
+}
+
+body.dark-mode #sessions-view .subject-progress-panel-main p:last-child {
+    color: #cbd5e1;
+}
+
+#sessions-view .subject-progress-panel-side {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.85rem;
+    min-width: 0;
+}
+
+#sessions-view .subject-progress-panel-side strong {
+    color: #0f766e;
+    font-size: 0.95rem !important;
+    letter-spacing: 0;
+}
+
+body.dark-mode #sessions-view .subject-progress-panel-side strong {
+    color: #99f6e4;
+}
+
 #sessions-view .sessions-list {
     display: grid;
     grid-template-columns: repeat(2, minmax(16rem, 1fr));
@@ -2790,6 +2848,18 @@ body.dark-mode #sessions-view .session-info {
     color: #cbd5e1;
 }
 
+#sessions-view .session-attempts {
+    margin-top: 0.5rem;
+    color: #64748b;
+    font-size: 0.78rem !important;
+    font-weight: 800;
+    letter-spacing: 0;
+}
+
+body.dark-mode #sessions-view .session-attempts {
+    color: #94a3b8;
+}
+
 #sessions-view .session-start {
     position: absolute;
     right: 1.15rem;
@@ -2913,6 +2983,10 @@ body.dark-mode #sessions-view .session-card.final-session .session-label {
     }
 
     #sessions-view .sessions-list {
+        grid-template-columns: 1fr;
+    }
+
+    #sessions-view .subject-progress-panel {
         grid-template-columns: 1fr;
     }
 
@@ -3183,7 +3257,8 @@ body.dark-mode #home-view .subject-card {
 
 #home-view .subject-card-top,
 #home-view .subject-card h3,
-#home-view .subject-card p {
+#home-view .subject-card p,
+#home-view .subject-progress {
     position: relative;
     z-index: 1;
 }
@@ -3260,6 +3335,61 @@ body.dark-mode #home-view .subject-card h3 {
 
 body.dark-mode #home-view .subject-card p {
     color: #cbd5e1;
+}
+
+#home-view .subject-progress {
+    display: grid;
+    gap: 0.45rem;
+    margin-top: auto;
+}
+
+#home-view .subject-progress-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    color: #64748b;
+    font-size: 0.78rem !important;
+    font-weight: 800;
+}
+
+#home-view .subject-progress-meta strong {
+    color: #0f766e;
+    font-size: 0.78rem !important;
+    white-space: nowrap;
+}
+
+body.dark-mode #home-view .subject-progress-meta {
+    color: #cbd5e1;
+}
+
+body.dark-mode #home-view .subject-progress-meta strong {
+    color: #99f6e4;
+}
+
+.mini-progress-bar,
+.wide-progress-bar {
+    width: 100%;
+    overflow: hidden;
+    border-radius: 999px;
+    background: rgba(148, 163, 184, 0.22);
+}
+
+.mini-progress-bar {
+    height: 0.45rem;
+}
+
+.wide-progress-bar {
+    height: 0.7rem;
+}
+
+.mini-progress-bar span,
+.wide-progress-bar span {
+    display: block;
+    height: 100%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, #14b8a6, #6366f1);
+    transition: width 240ms ease;
 }
 
 @media (max-width: 760px) {
@@ -3447,6 +3577,20 @@ body.dark-mode #results-view {
     font-size: clamp(1rem, 2.1vw, 1.16rem) !important;
     font-weight: 600;
     line-height: 1.45;
+}
+
+#results-view .result-progress-summary {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2rem;
+    margin-top: 0.85rem;
+    padding: 0.35rem 0.75rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.14);
+    color: #ffffff;
+    font-size: 0.84rem !important;
+    font-weight: 800;
+    letter-spacing: 0;
 }
 
 #results-view .review-section {
